@@ -1,0 +1,71 @@
+/* ======= 1. IMPORTS ======= */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+@import './index.css';
+@import './agendar.css'; /* o '../utilities/animations.css' */
+
+/* ======= 2. TAILWIND BASE ======= */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ======= 3. RESETS Y BASE GLOBAL ======= */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8fafc;
+    color: #1e293b;
+}
+
+* {
+    transition: all 0.2s ease-in-out;
+}
+
+h1, h2, h3, h4 {
+    font-weight: 700;
+    color: #14532d;
+}
+
+/* ======= 4. UTILIDADES PERSONALIZADAS ======= */
+
+/* Botones */
+.btn {
+    @apply inline-block px-5 py-2 rounded-xl font-semibold shadow transition-transform duration-300;
+}
+.btn-primary {
+    @apply bg-emerald-600 text-white hover:bg-emerald-700 hover:scale-105;
+}
+.btn-secondary {
+    @apply bg-white text-emerald-700 border border-emerald-300 hover:bg-emerald-100;
+}
+
+/* Cards */
+.card {
+    @apply bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition-shadow;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+.animate-fade {
+    animation: fadeIn 0.6s ease-in-out;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+.animate-slideup {
+    animation: slideUp 0.5s ease-out;
+}
+
+/* Layouts comunes */
+.container {
+    @apply max-w-6xl mx-auto px-4;
+}
+.section-title {
+    @apply text-2xl font-bold text-center text-emerald-800 mb-4;
+}
+.text-muted {
+    @apply text-gray-500;
+}

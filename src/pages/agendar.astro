@@ -1,0 +1,188 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout>
+  <main class="center min-h-screen px-4 py-10 bg-gradient-to-br from-emerald-100 via-green-100 to-white flex flex-col items-center animate-fade shadow-inner">
+    <a href="/"
+      class="mx-auto my-6 w-full max-w-xs sm:max-w-sm md:max-w-md flex items-center justify-center gap-2 px-5 py-3 bg-emerald-600 text-white text-base font-semibold rounded-xl shadow-md transition-all duration-300 hover:scale-105 hover:bg-emerald-700 active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 -ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg>
+      Volver al inicio
+    </a>
+
+    <h1 class="text-3xl font-bold mb-4 text-center text-emerald-800 animate-slideup">
+      Agendar Hora
+    </h1>
+
+    <p class="mb-6 text-center max-w-md text-gray-700 animate-fade">
+      Selecciona un día y luego elige una hora para tu sesión.
+    </p>
+
+    <div id="dias" class="flex flex-wrap justify-center gap-4 mb-10"></div>
+
+    <div id="horas" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-10"></div>
+
+    <div id="formulario" class="hidden bg-white p-6 rounded-2xl shadow-xl w-full max-w-md animate-fade">
+      <h2 class="text-xl font-semibold mb-4 text-center">Completa tus datos</h2>
+
+      <label class="block text-sm font-medium">Día:</label>
+      <input id="diaSeleccionado" class="w-full mb-4 p-2 border rounded bg-gray-100" disabled />
+
+      <label class="block text-sm font-medium">Hora:</label>
+      <input id="horaSeleccionada" class="w-full mb-4 p-2 border rounded bg-gray-100" disabled />
+
+      <label class="block text-sm font-medium">Nombre:</label>
+      <input id="nombre" type="text" class="w-full mb-4 p-2 border rounded" />
+
+      <label class="block text-sm font-medium">Teléfono:</label>
+      <input id="telefono" type="tel" class="w-full mb-4 p-2 border rounded" />
+
+      <label class="block text-sm font-medium">Tipo de sesión:</label>
+      <p class="w-full mb-6 p-2 bg-gray-100 border rounded text-gray-700">
+        El tipo de sesión se evalua directamente en la consulta y se adapta a la necesidad del paciente.
+      </p>
+
+
+      <button onclick="confirmarHora()"
+        class="w-full bg-emerald-600 text-white font-semibold py-2 rounded-lg shadow hover:bg-emerald-700 transform hover:scale-105 transition-all duration-300">
+        Confirmar hora
+      </button>
+    </div>
+  </main>
+
+  <script is:inline>
+    const SUPABASE_URL = "https://iilslothyxwvmqvtyjae.supabase.co";
+    const SUPABASE_API_KEY =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlpbHNsb3RoeXh3dm1xdnR5amFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI1MTU1NzgsImV4cCI6MjA2ODA5MTU3OH0.5Ihk0Jc-JUAkvu0lo68w-HmnZFgdmeie32yPw1nYA7g";
+
+    const diasContainer = document.getElementById("dias");
+    const horasContainer = document.getElementById("horas");
+    const formulario = document.getElementById("formulario");
+    const diaInput = document.getElementById("diaSeleccionado");
+    const horaInput = document.getElementById("horaSeleccionada");
+
+    let diaSeleccionado = "";
+
+    const obtenerProximosDiasHabiles = () => {
+      const hoy = new Date();
+      const dias = [];
+      let contador = 0;
+      while (dias.length < 5) {
+        const fecha = new Date(hoy);
+        fecha.setDate(hoy.getDate() + contador);
+        const dia = fecha.getDay();
+        if (dia >= 1 && dia <= 5) {
+          dias.push(fecha);
+        }
+        contador++;
+      }
+      return dias;
+    };
+
+    const formatearFecha = (fecha) => fecha.toISOString().split("T")[0];
+
+    const formatearDiaTexto = (fecha) =>
+      fecha.toLocaleDateString("es-CL", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+      });
+
+    obtenerProximosDiasHabiles().forEach((fecha) => {
+      const fechaISO = formatearFecha(fecha);
+      const btn = document.createElement("button");
+      btn.textContent = formatearDiaTexto(fecha);
+      btn.className =
+        "bg-white border border-emerald-300 hover:bg-emerald-100 text-emerald-800 font-medium rounded-lg px-4 py-2 transition-all duration-300 animate-fade";
+
+      btn.onclick = () => {
+        diaSeleccionado = fechaISO;
+        diaInput.value = formatearDiaTexto(fecha);
+        cargarHoras(fechaISO);
+        horasContainer.scrollIntoView({ behavior: "smooth" });
+      };
+      diasContainer.appendChild(btn);
+    });
+
+    async function cargarHoras(fechaISO) {
+      horasContainer.innerHTML = "";
+      formulario.classList.add("hidden");
+
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/reservas?fecha=eq.${fechaISO}`,
+        {
+          headers: {
+            apikey: SUPABASE_API_KEY,
+            Authorization: `Bearer ${SUPABASE_API_KEY}`,
+          },
+        }
+      );
+
+      const data = await res.json();
+      const horasOcupadas = data.map((r) => r.hora);
+
+      for (let h = 10; h < 20; h++) {
+        const hora = String(h).padStart(2, "0") + ":00";
+        const btn = document.createElement("button");
+        btn.textContent = hora;
+        btn.className = "px-4 py-2 rounded-lg border font-semibold animate-fade";
+
+        if (horasOcupadas.includes(hora)) {
+          btn.disabled = true;
+          btn.className += " bg-gray-300 text-gray-500 cursor-not-allowed";
+        } else {
+          btn.className +=
+            " bg-white text-black hover:bg-green-100 border-gray-300 transition-all duration-300 hover:scale-105";
+          btn.onclick = () => {
+            horaInput.value = hora;
+            formulario.scrollIntoView({ behavior: "smooth" });
+            formulario.classList.remove("hidden");
+          };
+        }
+
+        horasContainer.appendChild(btn);
+      }
+    }
+
+    async function confirmarHora() {
+      const nombre = document.getElementById("nombre").value;
+      const telefono = document.getElementById("telefono").value;
+      const tipo = "Adaptado en consulta";
+      const hora = horaInput.value;
+
+      if (!nombre || !telefono || !hora || !diaSeleccionado) {
+        alert("Completa todos los campos.");
+        return;
+      }
+
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/reservas`, {
+        method: "POST",
+        headers: {
+          apikey: SUPABASE_API_KEY,
+          Authorization: `Bearer ${SUPABASE_API_KEY}`,
+          "Content-Type": "application/json",
+          Prefer: "return=representation",
+        },
+        body: JSON.stringify({
+          nombre,
+          telefono,
+          fecha: diaSeleccionado,
+          hora,
+          tipo_sesion: tipo,
+        }),
+      });
+
+      if (res.ok) {
+        const mensaje = `Hola Jhonny, soy ${nombre}. Reservé una sesión para el día ${diaSeleccionado} a las ${hora}. Tipo de sesión: ${tipo}. Mi número es ${telefono}.`;
+        const urlWhatsApp = `https://wa.me/56988983603?text=${encodeURIComponent(mensaje)}`;
+        window.location.href = urlWhatsApp;
+      } else {
+        alert("Error al guardar la reserva.");
+      }
+    }
+
+    window.confirmarHora = confirmarHora;
+  </script>
+</Layout>

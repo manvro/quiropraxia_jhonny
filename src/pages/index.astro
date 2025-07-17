@@ -1,0 +1,56 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout>
+  <!-- Sección Hero (siempre visible primero) -->
+  <section class="relative h-screen overflow-hidden bg-gradient-to-br from-[#A0D6B4] via-[#7FB77E] to-[#3B755F] flex items-center justify-center">
+    <div class="text-center p-8 animate-fade">
+      <h1 class="text-4xl md:text-5xl font-bold text-white drop-shadow-md">
+        Bienestar y equilibrio en tus manos
+      </h1>
+
+      <p class="mt-4 text-emerald-50 text-lg md:text-xl animate-slideup">
+        Reserva tu sesión de quiropraxia o masaje con Jhonny
+      </p>
+      <a 
+        href="/agendar"
+        class="inline-block mt-6 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white text-lg font-medium rounded-xl shadow-lg transition-transform transform hover:scale-105 active:scale-95 animate-bounceOnce"
+      >
+        Reservar ahora
+      </a>
+    </div>
+  </section>
+
+  <!-- Sección de información extra al hacer scroll -->
+  <section class="bg-white text-gray-800 py-16 px-6 md:px-20">
+    <div class="max-w-4xl mx-auto text-center animate-fade">
+      <h2 class="text-3xl font-bold text-emerald-800 mb-4">Sobre Jhonny</h2>
+      <p class="text-lg leading-relaxed">
+        Con más de 10 años de experiencia en quiropraxia y masoterapia, Jhonny ha ayudado a cientos de personas a mejorar su bienestar físico y emocional.
+        Su enfoque personalizado y profesional lo convierten en una opción confiable y efectiva para quienes buscan alivio, relajación y equilibrio.
+      </p>
+    </div>
+  </section>
+
+  <!-- Sección de tipos de sesiones -->
+  <section class="bg-emerald-50 py-16 px-6 md:px-20">
+    <div class="max-w-6xl mx-auto animate-fade">
+      <h2 class="text-3xl font-bold text-center text-emerald-800 mb-8">Tipos de masajes y terapias</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div class="card">
+          <h3 class="text-xl font-semibold mb-2 text-emerald-700">Masaje de cuerpo completo</h3>
+          <p>Relaja y revitaliza todo el cuerpo, aliviando el estrés y la tensión muscular acumulada.</p>
+        </div>
+        <div class="card">
+          <h3 class="text-xl font-semibold mb-2 text-emerald-700">Masaje descontracturante</h3>
+          <p>Enfocado en zonas específicas para aliviar contracturas y mejorar la movilidad.</p>
+        </div>
+        <div class="card">
+          <h3 class="text-xl font-semibold mb-2 text-emerald-700">Terapia de espalda y cervical</h3>
+          <p>Ideal para quienes sufren de dolor crónico por malas posturas o estrés laboral.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

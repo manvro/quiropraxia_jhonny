@@ -1,0 +1,62 @@
+@keyframes pulse-bg {
+
+    0%,
+    100% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+.animate-bg {
+    background-size: 200% 200%;
+    animation: pulse-bg 15s ease infinite;
+}
+
+@keyframes fade {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.animate-fade {
+    animation: fade 2s ease-in-out;
+}
+
+@keyframes slideup {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.animate-slideup {
+    animation: slideup 1.2s ease-out;
+}
+
+@keyframes bounceOnce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-6px);
+    }
+}
+
+.animate-bounceOnce {
+    animation: bounceOnce 0.6s ease-in-out;
+}
