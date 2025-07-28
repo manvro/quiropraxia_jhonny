@@ -1,7 +1,7 @@
     // tailwind.config.js
-    /** @type {import('tailwindcss').Config} */
     export default {
     content: ["./src/**/*.{astro,html,js,ts}"],
+    safelist: ['card'], // 👈 esto es lo importante
     theme: {
         extend: {
         animation: {
@@ -21,4 +21,4 @@
         },
     },
     plugins: [],
-    }
+    };
