@@ -175,8 +175,8 @@ import Layout from "../layouts/Layout.astro";
       });
 
       if (res.ok) {
-        const mensaje = `Hola Jhonny, soy ${nombre}. Reservé una sesión para el día ${diaSeleccionado} a las ${hora}. Tipo de sesión: ${tipo}. Mi número es ${telefono}.`;
-        const urlWhatsApp = `https://wa.me/56988983603?text=${encodeURIComponent(mensaje)}`;
+        const mensaje = `Don Jhonny, Reservé una sesión para el día ${diaSeleccionado} a las ${hora}. Tipo de sesión: ${tipo}. Mi número es ${telefono}.`;
+        const urlWhatsApp = `https://wa.me/56964921699?text=${encodeURIComponent(mensaje)}`;
         window.location.href = urlWhatsApp;
       } else {
         alert("Error al guardar la reserva.");
