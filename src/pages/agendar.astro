@@ -52,6 +52,9 @@ import Layout from "../layouts/Layout.astro";
     </div>
   </main>
 
+<!-- Cargar SweetAlert2 correctamente -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
+
   <script is:inline>
     const SUPABASE_URL = "https://iilslothyxwvmqvtyjae.supabase.co";
     const SUPABASE_API_KEY =
@@ -153,7 +156,13 @@ import Layout from "../layouts/Layout.astro";
       const hora = horaInput.value;
 
       if (!nombre || !telefono || !hora || !diaSeleccionado) {
-        alert("Completa todos los campos.");
+        console.log("Swal disponible:", typeof Swal !== "undefined");
+        Swal.fire({
+          icon: 'warning',
+          title: 'Campos incompletos',
+          text: 'Por favor completa todos los campos para continuar.',
+          confirmButtonColor: '#10b981'
+        });
         return;
       }
 
@@ -174,12 +183,38 @@ import Layout from "../layouts/Layout.astro";
         }),
       });
 
+      
+
       if (res.ok) {
-        const mensaje = `Don Jhonny, Reservé una sesión para el día ${diaSeleccionado} a las ${hora}. Tipo de sesión: ${tipo}. Mi número es ${telefono}.`;
+        const [year, month, day] = diaSeleccionado.split("-");
+        const fechaLocal = new Date(year, month - 1, day); // mes - 1 porque empieza en 0
+
+        const fechaFormateada = fechaLocal.toLocaleDateString("es-CL", {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+        });
+
+        const mensaje = `Don Jhonny, reservé una sesión para el día ${fechaFormateada} a las ${hora}. Tipo de sesión: ${tipo}. Mi número es ${telefono}.`;
         const urlWhatsApp = `https://wa.me/56964921699?text=${encodeURIComponent(mensaje)}`;
-        window.location.href = urlWhatsApp;
+
+        Swal.fire({
+          icon: 'success',
+          title: '¡Reserva confirmada!',
+          text: 'Serás redirigido a WhatsApp para avisarle a Jhonny.',
+          confirmButtonText: 'Ir ahora',
+          confirmButtonColor: '#10b981'
+        }).then(() => {
+          window.location.href = urlWhatsApp;
+        });
+
       } else {
-        alert("Error al guardar la reserva.");
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo guardar la reserva. Intenta nuevamente.',
+          confirmButtonColor: '#ef4444'
+        });
       }
     }
 
